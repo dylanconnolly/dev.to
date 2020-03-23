@@ -1,6 +1,7 @@
 <% title "Reading List" %>
 
 <%= content_for :page_meta do %>
+  <%# ignore ... imporant but not %> 
   <link rel="canonical" href="https://dev.to/readinglist" />
   <meta name="description" content="Notifications inbox for dev.to">
   <meta name="keywords" content="software development,engineering,rails,javascript,ruby">
@@ -18,7 +19,9 @@
 <% end %>
 
 <div class="home">
+  <%# create a spot for the item list container ... these are where our react components will render %>
   <div class="item-list-container" id="reading-list" data-algolia-key="<%= @secured_algolia_key %>" data-view="<%= @view %>">
   </div>
 </div>
+<%# load the javascript file ... javacripts/ folder %>
 <%= javascript_pack_tag "readingList", defer: true %>

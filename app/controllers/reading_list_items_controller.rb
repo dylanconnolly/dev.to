@@ -1,7 +1,9 @@
 class ReadingListItemsController < ApplicationController
   def index
     @reading_list_items_index = true
+    # get the view
     set_view
+    # make a search key ... using built in algolia methods
     generate_algolia_search_key
   end
 

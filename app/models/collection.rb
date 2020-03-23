@@ -1,3 +1,4 @@
+# then we also have this collection object??? 
 class Collection < ApplicationRecord
   has_many :articles
   belongs_to :user

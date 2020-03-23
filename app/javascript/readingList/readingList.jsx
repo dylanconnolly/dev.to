@@ -2,23 +2,27 @@ import { h, Component } from 'preact';
 import { PropTypes } from 'preact-compat';
 import debounce from 'lodash.debounce';
 
+{/* import a few things from component searchableItemList*/ }
 import {
-  defaultState,
+  defaultState, //default state is empty, I think
   loadNextPage,
   onSearchBoxType,
   performInitialSearch,
   search,
-  toggleTag,
+  toggleTag, //interesting 
   clearSelectedTags,
-} from '../searchableItemList/searchableItemList';
+} from '../searchableItemList/searchableItemList'; // this is related to algeria
+{/*  import remaining items */}
 import { ItemListItem } from '../src/components/ItemList/ItemListItem';
 import { ItemListItemArchiveButton } from '../src/components/ItemList/ItemListItemArchiveButton';
 import { ItemListLoadMoreButton } from '../src/components/ItemList/ItemListLoadMoreButton';
+{/* list items */ }
 import { ItemListTags } from '../src/components/ItemList/ItemListTags';
-
+{/* set paths */ }
 const STATUS_VIEW_VALID = 'valid';
 const STATUS_VIEW_ARCHIVED = 'archived';
 const READING_LIST_ARCHIVE_PATH = '/readinglist/archive';
+{/* where we can find the readinglist */ }
 const READING_LIST_PATH = '/readinglist';
 
 const FilterText = ({ selectedTags, query, value }) => {
@@ -31,38 +35,47 @@ const FilterText = ({ selectedTags, query, value }) => {
   );
 };
 
+{/* reading list component */ }
 export class ReadingList extends Component {
   constructor(props) {
     super(props);
 
+    // set initial tags and view to this current componet Reading list imported props 
     const { availableTags, statusView } = this.props;
+
+    {/* gets set to defaultState (empty tags) */ }
     this.state = defaultState({ availableTags, archiving: false, statusView });
 
-    // bind and initialize all shared functions
+    {/* bind and initialize all shared functions */}
     this.onSearchBoxType = debounce(onSearchBoxType.bind(this), 300, {
       leading: true,
     });
     this.loadNextPage = loadNextPage.bind(this);
     this.performInitialSearch = performInitialSearch.bind(this);
     this.search = search.bind(this);
-    this.toggleTag = toggleTag.bind(this);
+
+    this.toggleTag = toggleTag.bind(this)
     this.clearSelectedTags = clearSelectedTags.bind(this);
   }
 
+  {/* mount component and do stuff */} 
   componentDidMount() {
     const { hitsPerPage, statusView } = this.state;
 
+     {/* run a seaarch initally ... not going to worry too much about angolia */}
     this.performInitialSearch({
+      {/* reading list */}
       containerId: 'reading-list',
       indexName: 'SecuredReactions',
       searchOptions: {
-        hitsPerPage,
+        hitsPerPage, {/* can search by hits */ }
         filters: `status:${statusView}`,
       },
     });
   }
 
   toggleStatusView = event => {
+    {/* this seems hacky*/ }
     event.preventDefault();
 
     const { query, selectedTags } = this.state;
@@ -75,16 +88,17 @@ export class ReadingList extends Component {
       ? READING_LIST_ARCHIVE_PATH
       : READING_LIST_PATH;
 
-    // empty items so that changing the view will start from scratch
+    {/*  empty items so that changing the view will start from scratch */}
     this.setState({ statusView: newStatusView, items: [] });
 
+    {/*search */}
     this.search(query, {
       page: 0,
       tags: selectedTags,
       statusView: newStatusView,
     });
 
-    // change path in the address bar
+    {/*  change path in the address bar */ }
     window.history.replaceState(null, null, newPath);
   };
 
@@ -92,6 +106,7 @@ export class ReadingList extends Component {
     event.preventDefault();
 
     const { statusView, items, totalCount } = this.state;
+    {/*  get an item for view */ }
     window.fetch(`/reading_list_items/${item.id}`, {
       method: 'PUT',
       headers: {
@@ -102,6 +117,7 @@ export class ReadingList extends Component {
       credentials: 'same-origin',
     });
 
+    // updating state to new items
     const t = this;
     const newItems = items;
     newItems.splice(newItems.indexOf(item), 1);
@@ -122,6 +138,7 @@ export class ReadingList extends Component {
     return statusView === STATUS_VIEW_VALID;
   }
 
+  {/* empty view */}
   renderEmptyItems() {
     const { itemsLoaded, selectedTags, query } = this.state;
 
@@ -160,6 +177,7 @@ export class ReadingList extends Component {
     );
   }
 
+  {/* what to render ... set this props to this.state */}
   render() {
     const {
       items,
@@ -171,9 +189,12 @@ export class ReadingList extends Component {
       archiving,
     } = this.state;
 
+    {/* call statusViewValid and assign */}
     const isStatusViewValid = this.statusViewValid();
 
     const archiveButtonLabel = isStatusViewValid ? 'archive' : 'unarchive';
+
+    {/* itemToRender map over the items and render the items */}
     const itemsToRender = items.map(item => {
       return (
         <ItemListItem item={item}>
@@ -185,6 +206,7 @@ export class ReadingList extends Component {
       );
     });
 
+    {/* snackBar */}
     const snackBar = archiving ? (
       <div className="snackbar">
         {isStatusViewValid ? 'Archiving...' : 'Unarchiving...'}
@@ -192,6 +214,7 @@ export class ReadingList extends Component {
     ) : (
       ''
     );
+    {/* returns the actual rendering */}
     return (
       <div className="home item-list">
         <div className="side-bar">
@@ -235,6 +258,7 @@ export class ReadingList extends Component {
           </div>
         </div>
 
+        {/* this is where items will load */}
         <div className="items-container">
           <div className={`results ${itemsLoaded ? 'results--loaded' : ''}`}>
             <div className="results-header">
@@ -242,10 +266,11 @@ export class ReadingList extends Component {
               {` (${totalCount > 0 ? totalCount : 'empty'})`}
             </div>
             <div>
+              {/* either render items or nothing */} 
               {items.length > 0 ? itemsToRender : this.renderEmptyItems()}
             </div>
           </div>
-
+          {/* onClick load more items */}
           <ItemListLoadMoreButton
             show={showLoadMoreButton}
             onClick={this.loadNextPage}
@@ -258,15 +283,18 @@ export class ReadingList extends Component {
   }
 }
 
+{/* something with props */}
 ReadingList.defaultProps = {
   statusView: STATUS_VIEW_VALID,
 };
 
+{/* set up required validations for ReadingList */}
 ReadingList.propTypes = {
   availableTags: PropTypes.arrayOf(PropTypes.string).isRequired,
   statusView: PropTypes.oneOf([STATUS_VIEW_VALID, STATUS_VIEW_ARCHIVED]),
 };
 
+{/* dont understand... likely peripherially important */}
 FilterText.propTypes = {
   selectedTags: PropTypes.arrayOf(PropTypes.string).isRequired,
   value: PropTypes.string.isRequired,

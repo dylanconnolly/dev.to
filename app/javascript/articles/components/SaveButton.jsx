@@ -1,3 +1,4 @@
+// what is this commponent thing
 import { h, Component } from 'preact';
 import PropTypes from 'prop-types';
 import { articlePropTypes } from '../../src/components/common-prop-types';

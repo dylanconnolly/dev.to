@@ -1,6 +1,12 @@
+// importing some files 
+// header file from preact
 import { h } from 'preact';
+// this is validator library for react
 import PropTypes from 'prop-types';
+
 import { articlePropTypes } from '../src/components/common-prop-types/article-prop-types';
+
+// we are loading in components
 import {
   CommentsCount,
   ContentTitle,
@@ -12,10 +18,13 @@ import {
   TagList,
   ReactionsCount,
 } from './components';
+
+// load in PodcastsArticle
 import { PodcastArticle } from './PodcastArticle';
 
 /* global timeAgo */
 
+// we are exporting something here
 export const Article = ({
   article,
   currentTag,
@@ -25,10 +34,12 @@ export const Article = ({
   videoIcon,
   bookmarkClick,
 }) => {
+  // seperate for podcasts?
   if (article && article.type_of === 'podcast_episodes') {
     return <PodcastArticle article={article} />;
   }
 
+  // else return this?
   return (
     <div
       className="single-article single-article-small-pic"
@@ -126,11 +137,13 @@ export const Article = ({
   );
 };
 
+// default properties for the article
 Article.defaultProps = {
   currentTag: null,
   isBookmarked: false,
 };
 
+// this are validators on the Article class
 Article.propTypes = {
   article: articlePropTypes.isRequired,
   currentTag: PropTypes.string,

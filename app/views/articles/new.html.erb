@@ -1,11 +1,19 @@
 <% title "New Post" %>
 
 <% if user_signed_in? %>
+
+  <%# render something %>
   <%= render "shared/webcomponents_loader_script" %>
+
+  <%# no idea %>
   <%= javascript_pack_tag "clipboardCopy", defer: true %>
   <%= javascript_pack_tag "articleForm", defer: true %>
+
+  <%# probably the form to fill out %> 
   <%= render "articles/v2_form", article: @article, organizations: @organizations, version: @version %>
 <% else %>
+
+  <%# if they are not logged in, use devise to log in %> 
   <% @new_article_not_logged_in = true %>
   <%= render "devise/registrations/registration_form" %>
 <% end %>

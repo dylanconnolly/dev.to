@@ -1,6 +1,6 @@
 class DashboardsController < ApplicationController
   before_action :set_no_cache_header
-  before_action :authenticate_user!
+  before_action :authenticate_user! # Devise?
   before_action :fetch_and_authorize_user, except: :pro
   before_action -> { limit_per_page(default: 80, max: 1000) }, except: %i[show pro]
   after_action :verify_authorized

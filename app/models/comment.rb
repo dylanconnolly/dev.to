@@ -4,6 +4,8 @@ class Comment < ApplicationRecord
   include AlgoliaSearch
   include Reactable
   belongs_to :commentable, polymorphic: true, optional: true
+  # Turbo-charged counter caches for your Rails app
+  # gem that does the counting .... ??? 
   counter_culture :commentable
   belongs_to :user
   counter_culture :user

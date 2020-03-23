@@ -119,6 +119,7 @@ class Article < ApplicationRecord
     where("boost_states ->> 'boosted_dev_digest_email' = 'true'")
   }
 
+  # looks like me might need to work with this somehow in our collection
   scope :sorting, lambda { |value|
     value ||= "creation-desc"
     kind, dir = value.split("-")

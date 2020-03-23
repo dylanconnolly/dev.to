@@ -93,6 +93,7 @@ class Internal::ArticlesController < Internal::ApplicationController
       per(50)
   end
 
+  # this might be something to look at  ... this hotness_score
   def articles_mixed
     Article.published.
       includes(user: [:notes]).

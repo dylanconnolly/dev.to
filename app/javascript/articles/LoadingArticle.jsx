@@ -1,3 +1,4 @@
+// header file for preact
 import { h } from 'preact';
 
 export const LoadingArticle = ({version}) => {

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 
+// *tag* validations
 export const tagPropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,

@@ -3,6 +3,7 @@ import { getUserDataAndCsrfToken } from '../chat/util';
 import { ReadingList } from '../readingList/readingList';
 
 function loadElement() {
+  // get current user and cookies
   getUserDataAndCsrfToken().then(({ currentUser }) => {
     const root = document.getElementById('reading-list');
     if (root) {

@@ -1,5 +1,9 @@
+//require validations
 import PropTypes from 'prop-types';
+
+// put the tag prop type in there
 import { tagPropTypes } from './tag-prop-types';
+// org validations
 import { organizationPropType } from './organization-prop-type';
 
 export const articleSnippetResultPropTypes = PropTypes.shape({
@@ -13,6 +17,8 @@ export const articleSnippetResultPropTypes = PropTypes.shape({
   }),
 });
 
+// something about this shape thing 
+// this is shape - key value pairs for what is what
 export const articlePropTypes = PropTypes.shape({
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
@@ -22,6 +28,8 @@ export const articlePropTypes = PropTypes.shape({
   type_of: PropTypes.oneOf(['podcast_episodes']),
   class_name: PropTypes.oneOf(['PodcastEpisode', 'User', 'Article']),
   flare_tag: tagPropTypes,
+  //
+  // check that it's an array and aray of strings 
   tag_list: PropTypes.arrayOf(PropTypes.string),
   cached_tag_list_array: PropTypes.arrayOf(PropTypes.string),
   podcast: PropTypes.shape({
