@@ -18,7 +18,10 @@
 <% end %>
 
 <div class="home">
+  <!-- passes information in a div to the view. This div has data attributes that use the instance variables from the controller -->
   <div class="item-list-container" id="reading-list" data-algolia-key="<%= @secured_algolia_key %>" data-view="<%= @view %>">
   </div>
 </div>
+
+<%# tells the view to go use the readingList javascript file and load it with the view %>
 <%= javascript_pack_tag "readingList", defer: true %>

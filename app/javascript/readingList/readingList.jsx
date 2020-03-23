@@ -21,6 +21,7 @@ const STATUS_VIEW_ARCHIVED = 'archived';
 const READING_LIST_ARCHIVE_PATH = '/readinglist/archive';
 const READING_LIST_PATH = '/readinglist';
 
+// displays text if the selected tag does not have any articles matching it
 const FilterText = ({ selectedTags, query, value }) => {
   return (
     <h1>
@@ -31,10 +32,12 @@ const FilterText = ({ selectedTags, query, value }) => {
   );
 };
 
+// instantiate ReadingList class with constructors
 export class ReadingList extends Component {
   constructor(props) {
     super(props);
 
+    // sets constants availableTags and statusView to the data pased from the props in /packs/readingList.jsx file
     const { availableTags, statusView } = this.props;
     this.state = defaultState({ availableTags, archiving: false, statusView });
 
@@ -52,6 +55,8 @@ export class ReadingList extends Component {
   componentDidMount() {
     const { hitsPerPage, statusView } = this.state;
 
+    // makes initial call to Algolia to return the items on that user's reading list
+    // performInitialSearch is in the
     this.performInitialSearch({
       containerId: 'reading-list',
       indexName: 'SecuredReactions',
@@ -88,11 +93,14 @@ export class ReadingList extends Component {
     window.history.replaceState(null, null, newPath);
   };
 
+  // toggles an article between being archived or not
   toggleArchiveStatus = (event, item) => {
     event.preventDefault();
 
     const { statusView, items, totalCount } = this.state;
+    // makes fetch request to reading_list_items update action
     window.fetch(`/reading_list_items/${item.id}`, {
+      // makes put request to update reading_list_items and change item to archived
       method: 'PUT',
       headers: {
         'X-CSRF-Token': window.csrfToken,
@@ -102,6 +110,7 @@ export class ReadingList extends Component {
       credentials: 'same-origin',
     });
 
+    // updates the number of articles showing now that one is archived
     const t = this;
     const newItems = items;
     newItems.splice(newItems.indexOf(item), 1);
@@ -122,6 +131,7 @@ export class ReadingList extends Component {
     return statusView === STATUS_VIEW_VALID;
   }
 
+  // display text if readinglist is empty
   renderEmptyItems() {
     const { itemsLoaded, selectedTags, query } = this.state;
 
@@ -160,6 +170,7 @@ export class ReadingList extends Component {
     );
   }
 
+  // gives access to attributes by just calling their name instead of this.state.items, this.state.itemsLoaded, etc.
   render() {
     const {
       items,
@@ -174,6 +185,7 @@ export class ReadingList extends Component {
     const isStatusViewValid = this.statusViewValid();
 
     const archiveButtonLabel = isStatusViewValid ? 'archive' : 'unarchive';
+    // maps through all of the items on the ReadingList component and creates an ItemListItem component
     const itemsToRender = items.map(item => {
       return (
         <ItemListItem item={item}>

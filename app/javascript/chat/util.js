@@ -15,9 +15,12 @@ const getWaitOnUserDataHandler = ({ resolve, reject, waitTime = 20 }) => {
       return;
     }
 
+    // grabs the CSRF token from the webpage and sets it to a constant
     const csrfToken = getCsrfToken(document);
+    // grabs the user that is passed as a dataset on the webpage and stores it as a constant
     const { user } = document.body.dataset;
 
+    // if both return true, resolve with the currentUser and CSRF token
     if (user && csrfToken !== undefined) {
       const currentUser = JSON.parse(user);
 
@@ -30,6 +33,7 @@ const getWaitOnUserDataHandler = ({ resolve, reject, waitTime = 20 }) => {
   };
 };
 
+// creates a promise that either resolves or rejects and stops the process
 export function getUserDataAndCsrfToken() {
   return new Promise((resolve, reject) => {
     getWaitOnUserDataHandler({ resolve, reject })();
