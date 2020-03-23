@@ -1,26 +1,39 @@
+/* Preact provides an h() function that turns JSX into virtual DOM elements */
+/* Imports Component class from preact. Component is a base class that you usually subclass to create stateful Preact components */
 import { h, Component } from 'preact';
+/* Imports the propTypes property that runs typechecking on the props for a component (reduces type error) */
 import { PropTypes } from 'preact-compat';
+/* imports debounce so that API calls don't execute too frequently. A debounced function will ignore all calls to it until the calls have stopped for a specified time period. */
 import debounce from 'lodash.debounce';
 
+/* Imports functions from searchableItemList.js */
 import {
+  /* defaultState function creates a const variable called state equal to an object. The object contains properties that define a default state where query is a blank string, etc. */
   defaultState,
+  /* loadNextPage function loads a component for the next page */
   loadNextPage,
+  /* onSearchBoxType function loads a component that displays a query based on what is typed */
   onSearchBoxType,
+  /* performInitialSearch function executes a search through Algolia, returns a result with items, count, and more  */
   performInitialSearch,
+  /* search function loads a new page of search results */
   search,
+  /* toggleTag function toggles between tags? scrolls through tags? */
   toggleTag,
+  /* clearSelectedTags function  clears tags from the search query so that query is no longer searching for articles with those tags */
   clearSelectedTags,
 } from '../searchableItemList/searchableItemList';
+/* Imports various components. Components are JavaScript classes or functions that optionally accepts inputs (props) and return React elements that describe how a section of the UI should appear */
 import { ItemListItem } from '../src/components/ItemList/ItemListItem';
 import { ItemListItemArchiveButton } from '../src/components/ItemList/ItemListItemArchiveButton';
 import { ItemListLoadMoreButton } from '../src/components/ItemList/ItemListLoadMoreButton';
 import { ItemListTags } from '../src/components/ItemList/ItemListTags';
-
+/* sets const variables equal to strings that specificy status and path */
 const STATUS_VIEW_VALID = 'valid';
 const STATUS_VIEW_ARCHIVED = 'archived';
 const READING_LIST_ARCHIVE_PATH = '/readinglist/archive';
 const READING_LIST_PATH = '/readinglist';
-
+/* creates const variable FilterText, returns either a value/values that match the selectedTags or nothing with this filter if there are none that match the tags */
 const FilterText = ({ selectedTags, query, value }) => {
   return (
     <h1>
@@ -31,11 +44,16 @@ const FilterText = ({ selectedTags, query, value }) => {
   );
 };
 
+// ReadingList is a class-based component that extends functionality from Component. Like inheritance in Ruby, ReadingList has access to certain functionality from Component (part of React and Preact)
 export class ReadingList extends Component {
+  // Like the Ruby initialize method, the constructor sets up the variables associated with the class
   constructor(props) {
     super(props);
 
+    // creates an object with availableTags and statusView that keeps track of available tags and the status of items on the reading list (archived or valid)
     const { availableTags, statusView } = this.props;
+
+    // sets the state of the reading list equal to attributes of the defaultState defined in searchableItemList
     this.state = defaultState({ availableTags, archiving: false, statusView });
 
     // bind and initialize all shared functions
@@ -49,6 +67,7 @@ export class ReadingList extends Component {
     this.clearSelectedTags = clearSelectedTags.bind(this);
   }
 
+  // Once this component mounts, load the reading list items
   componentDidMount() {
     const { hitsPerPage, statusView } = this.state;
 
@@ -62,6 +81,7 @@ export class ReadingList extends Component {
     });
   }
 
+  // toggleStatusView controls the path that a link goes to. The path depends on what is passed through statusViewValid
   toggleStatusView = event => {
     event.preventDefault();
 
@@ -88,6 +108,7 @@ export class ReadingList extends Component {
     window.history.replaceState(null, null, newPath);
   };
 
+  // toggleArchiveStatus can add items to archive or unarchive them
   toggleArchiveStatus = (event, item) => {
     event.preventDefault();
 
@@ -117,11 +138,13 @@ export class ReadingList extends Component {
     }, 1000);
   };
 
+  // returns true or false depending on whether statusView is strictlye qual to STATUS_VIEW_VALID
   statusViewValid() {
     const { statusView } = this.state;
     return statusView === STATUS_VIEW_VALID;
   }
 
+  // renderEmptyItems displays messages that tells users to add items to their reading list. Since this.state is equal to the value of the defaultState, itemsLoaded is false, selectedTags is empty, and query = ''
   renderEmptyItems() {
     const { itemsLoaded, selectedTags, query } = this.state;
 
@@ -160,6 +183,7 @@ export class ReadingList extends Component {
     );
   }
 
+  // Every class needs to have a render. This is telling Preact what to display on the page. In this case, it's the attributes of this.state
   render() {
     const {
       items,
@@ -174,6 +198,8 @@ export class ReadingList extends Component {
     const isStatusViewValid = this.statusViewValid();
 
     const archiveButtonLabel = isStatusViewValid ? 'archive' : 'unarchive';
+
+    // itemsToRender maps through each item of the reading list and displays the item and a button with that article's status (archived or valid)
     const itemsToRender = items.map(item => {
       return (
         <ItemListItem item={item}>
@@ -192,6 +218,8 @@ export class ReadingList extends Component {
     ) : (
       ''
     );
+
+    // returns JSX below. Similar to ERB, JSX builds an HTML template (a dynamic HTML component)
     return (
       <div className="home item-list">
         <div className="side-bar">
