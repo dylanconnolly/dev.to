@@ -4,7 +4,7 @@ import debounce from 'lodash.debounce';
 
 {/* import a few things from component searchableItemList*/ }
 import {
-  defaultState, //default state is empty, I think
+  defaultState, //default state is empty, I thins k
   loadNextPage,
   onSearchBoxType,
   performInitialSearch,
@@ -58,17 +58,16 @@ export class ReadingList extends Component {
     this.clearSelectedTags = clearSelectedTags.bind(this);
   }
 
-  {/* mount component and do stuff */} 
   componentDidMount() {
     const { hitsPerPage, statusView } = this.state;
 
      {/* run a seaarch initally ... not going to worry too much about angolia */}
     this.performInitialSearch({
-      {/* reading list */}
+      /* reading list */
       containerId: 'reading-list',
       indexName: 'SecuredReactions',
       searchOptions: {
-        hitsPerPage, {/* can search by hits */ }
+        hitsPerPage, /* can search by hits */ 
         filters: `status:${statusView}`,
       },
     });
@@ -138,7 +137,7 @@ export class ReadingList extends Component {
     return statusView === STATUS_VIEW_VALID;
   }
 
-  {/* empty view */}
+  /* empty view */
   renderEmptyItems() {
     const { itemsLoaded, selectedTags, query } = this.state;
 
@@ -154,7 +153,7 @@ export class ReadingList extends Component {
             Hit the
             <span className="highlight">SAVE</span>
             or
-            <span className="highlight">
+            <span className="highlight">nd 
               Bookmark
               <span role="img" aria-label="Bookmark">
                 🔖
@@ -177,7 +176,7 @@ export class ReadingList extends Component {
     );
   }
 
-  {/* what to render ... set this props to this.state */}
+  /* what to render ... set this props to this.state */
   render() {
     const {
       items,
