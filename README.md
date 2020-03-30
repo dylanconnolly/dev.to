@@ -188,6 +188,13 @@ doc or email yo@dev.to.
 
 ![schema_dev_to](https://user-images.githubusercontent.com/16090626/77874320-cf839280-7209-11ea-88af-4d119e43b275.png)
 
+## Wireframes
+
+- [Empty collections](https://wireframe.cc/CQUj29)
+- [Reading list index](https://wireframe.cc/O71aRK)
+- [New collection form](https://wireframe.cc/USoNun)
+- [Collection show](https://wireframe.cc/2ROLfW)
+
 ## Visualizing the Front End 
 
 ![7043D0A0-1D7D-4C58-BBAC-13032F658EFD_1_105_c](https://user-images.githubusercontent.com/16090626/77864737-933f3a80-71e7-11ea-834a-afd7a6977a80.jpeg)
