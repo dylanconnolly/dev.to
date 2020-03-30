@@ -6,6 +6,7 @@
 </div>
 <br>
 <p align="center">
+<details><summary>Original Dev.to Readme</summary>
   <a href="https://www.ruby-lang.org/en/">
     <img src="https://img.shields.io/badge/Ruby-v2.6.5-green.svg" alt="ruby version">
   </a>
@@ -159,3 +160,128 @@ doc or email yo@dev.to.
   <br>
   <strong>Happy Coding</strong> ❤️
 </p>
+
+</details>
+<details> <summary>Project Scope and Specifications</summary>
+
+## Machine Collections
+
+  I don’t have time and energy to read these articles every day, but I’d like to catch up with the best recent content.
+
+  Thankfully, we have machines for that. As a reader I login to the app and create a new “collection” with a name like “Best of JS”. Within the collection I can target some specific tags (maybe using my followed tags as suggestions). Then, each week, the app generates a collection based on posts published that week in those tags, prioritizing them by the number of reads. That collection is browseable at a unique URL.
+
+  Extensions:
+  The collection has a publicly-sharable URL, so that you can tweet it out, I can click the link, and see a listing page of all the articles in the collection.
+  When I click articles in the collection, mark them as read
+  Display which articles I have and haven’t read
+  Display how many times each article in the collection has been read
+  Allow the reader to make articles as “Not Interested” and grey them out
+  Implement some sorting in the listing display like “Published Date”, “Added Date”, “Most Popular”# Code Annotations - 
+
+## Extension Background
+- Dev.to is a website that allows users to write articles, follow fellow writers and bookmark.  Bookmarked articles will appear in a ReadingList view.  This view `/readingList` will be extended to include another component called `collectionList` and will have sub components that are `collectionListItems` that render the title of a collection.  When a user clicks on that collection title, they are taken to a rails view (show or index) of that collection and associated articles.  The machine collections takes a tag and searches once a week for articles assoicated to that collection/tag.
+</blockquote></details>
+</details>
+<details> <summary>Process</summary>
+
+## ERD Diagram
+
+![schema_dev_to](https://user-images.githubusercontent.com/16090626/77874320-cf839280-7209-11ea-88af-4d119e43b275.png)
+
+## Visualizing the Front End 
+
+![7043D0A0-1D7D-4C58-BBAC-13032F658EFD_1_105_c](https://user-images.githubusercontent.com/16090626/77864737-933f3a80-71e7-11ea-834a-afd7a6977a80.jpeg)
+
+![32ACB25D-26B5-46CA-866D-417D51AA2225_1_105_c](https://user-images.githubusercontent.com/16090626/77864738-9508fe00-71e7-11ea-9b65-e60053885e15.jpeg)
+
+</details>
+
+<details><summary>Files of the Front End</summary>
+
+  ## -> Validations
+
+  - ReadingList has some prop checking
+  - /Users/josho/turing/4module/projects/dev.to.local/app/javascript/src/components/common-prop-types 
+
+## -> ERB View: Loading the Index view of ReadingList 
+
+  - /Users/josho/turing/4module/projects/dev.to.local/app/views/reading_list_items/index.html.erb
+  - `<%= javascript_pack_tag "readingList", defer: true %>`
+  - This file loads the pack and ultimately the javacript/react for ReadList
+  - This is where we will load a CollectionListItem for our collections list
+
+  ## -> Reading List Pack
+
+  - /Users/josho/turing/4module/projects/dev.to.local/app/javascript/packs/readingList.jsx
+  - This if used by Webpack to load the ReadingList component and associated files
+
+  ## -> Reading List
+
+  - /Users/josho/turing/4module/projects/dev.to.local/app/javascript/readingList/readingList.jsx
+  - This file renders the readingsList component as well as a newly minted component `collectionList`
+
+  ## -> Collections Endpoint: Populate Collections Component  
+
+  - An api call to the readlingList.jsx file to populate a collectionListItems on the `readinglist`   
+  - `getCollections = (userId) => {
+    const url =`api/${userId}/collections`
+    fetch(url)
+    .then(response => {
+    return response.json()})
+    .then((data) => {
+    this.setState({
+      collectionItems: data.data
+    })
+  })
+  .catch((error) => console.log(error))} `
+
+  ## -> Create a `collectionListItem` component 
+
+  - To be populated with the fetch call 
+  - file is located at `/app/javascript/src/components/CollectionList/CollectionListItem.jsx`
+  ````export const CollectionListItem = ({ title, collectionId, userId }) => {
+  const path = `${ userId }/collections/${ collectionId }`
+  return (
+    <div className='item-wrapper'>
+      <a className="item" href={path}>
+        <div className="item-title">
+          {title}
+        </div>
+      </a>
+    </div>
+  )
+  };
+  ````
+  
+
+</details>
+<details> <summary>Dataflow of the Back End </summary>
+
+## Dev.to backend
+
+- The machine_collections table and MachineCollection model have attributes of a title, slug, cached_tag_list, and a foreign key of a user id.
+- When a user clicks a link to create a new collection, they are routed to ```"/:user_id/collections/new"``` and hit ```machine_collections_controller#new```, which displays a view to create a new collection
+- A user can enter a title for a collection and select a tag for their collection. The title and tag are sent as params in the create action.
+- When a user clicks submit, a post request is sent to ```"/:user_id/collections"```, which hits ```"machine_collections#create"```.
+- Within this create method, a new collection is created based off of the collection_params (the title, selected tag, and user id).
+- The list of collections that are displayed within the collections component are retrieved with a fetch to the api endpoint ```"/api/:user_id/collections"```, which hits ```"/api/machine_collections#index"``` and gathers all collections associated with a specific user.
+- Once a collection has been created, the user can click the title of a collection within the collections component. The user is routed to ```"/:user_id/collections/:id"```, which hits ```"machine_collections#show"``` and displays that collection's show page.
+- The show method calls on a method, ```articles_past_seven_days```, within the MachineCollection model that queries the database for articles that have a tag that matches the collection's cached_tag_list (only holds one tag right now) and were written in the last seven days. The query displays articles from greatest to least number of page views.
+</details>
+</details>
+<details> <summary>Contributing, Credits, Issues</summary>
+
+## Contributing
+
+- Feel free to submit a pull request for review.
+
+## Credits
+
+- [Dylan Connolly](https://github.com/dylanconnolly)
+- [Rachel Lew](https://gist.github.com/rlew421)
+- [Joshua O'Bannon](https://github.com/jobannon)
+
+## Issues
+- Please feel free to track current progress by visiting the project board
+- [Project Board](https://github.com/dylanconnolly/dev.to/projects/1)
+</details>
