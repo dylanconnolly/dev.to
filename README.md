@@ -184,6 +184,12 @@ doc or email yo@dev.to.
 </details>
 <details> <summary>Process</summary>
 
+
+## Video Walkthru 
+
+- If you would like a video walkthrough of the project please visit the link below. 
+- Video: https://vimeo.com/402820047
+
 ## ERD Diagram
 
 ![schema_dev_to](https://user-images.githubusercontent.com/16090626/77874320-cf839280-7209-11ea-88af-4d119e43b275.png)
